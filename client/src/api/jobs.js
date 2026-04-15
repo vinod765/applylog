@@ -1,74 +1,54 @@
-// src/api/jobs.js
-// Mock jobs data — swap for real fetch() calls once backend is ready
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:5000"
 
-let mockJobs = [
-  {
-    id: "1",
-    company: "Google",
-    role: "Frontend Engineer",
-    status: "Applied",
-    url: "https://careers.google.com",
-    notes: "Applied via referral from John.",
-    appliedAt: "2025-04-01",
-  },
-  {
-    id: "2",
-    company: "Stripe",
-    role: "React Developer",
-    status: "Interview",
-    url: "https://stripe.com/jobs",
-    notes: "Phone screen scheduled for next week.",
-    appliedAt: "2025-04-03",
-  },
-  {
-    id: "3",
-    company: "Notion",
-    role: "UI Engineer",
-    status: "Offer",
-    url: "https://notion.so/careers",
-    notes: "Offer received — reviewing compensation.",
-    appliedAt: "2025-03-28",
-  },
-  {
-    id: "4",
-    company: "Meta",
-    role: "SWE Intern",
-    status: "Rejected",
-    url: "",
-    notes: "No feedback provided.",
-    appliedAt: "2025-03-20",
-  },
-  {
-    id: "5",
-    company: "Linear",
-    role: "Product Engineer",
-    status: "Applied",
-    url: "https://linear.app/careers",
-    notes: "",
-    appliedAt: "2025-04-10",
-  },
-]
+function getToken() {
+  return localStorage.getItem("token")
+}
+
+function authHeaders() {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${getToken()}`,
+  }
+}
 
 export async function getJobs() {
-  await new Promise(r => setTimeout(r, 500))
-  return [...mockJobs]
+  const res = await fetch(`${BASE}/api/jobs`, {
+    headers: authHeaders(),
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.message || "Failed to fetch jobs")
+  // backend returns _id, frontend uses id — normalize here
+  return data.map(j => ({ ...j, id: j._id }))
 }
 
 export async function addJob(jobData) {
-  await new Promise(r => setTimeout(r, 400))
-  const newJob = { ...jobData, id: Date.now().toString() }
-  mockJobs.push(newJob)
-  return newJob
+  const res = await fetch(`${BASE}/api/jobs`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify(jobData),
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.message || "Failed to add job")
+  return { ...data, id: data._id }
 }
 
-export async function updateJob(id, data) {
-  await new Promise(r => setTimeout(r, 300))
-  mockJobs = mockJobs.map(j => (j.id === id ? { ...j, ...data } : j))
-  return mockJobs.find(j => j.id === id)
+export async function updateJob(id, updates) {
+  const res = await fetch(`${BASE}/api/jobs/${id}`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify(updates),
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.message || "Failed to update job")
+  return { ...data, id: data._id }
 }
 
 export async function deleteJob(id) {
-  await new Promise(r => setTimeout(r, 300))
-  mockJobs = mockJobs.filter(j => j.id !== id)
+  const res = await fetch(`${BASE}/api/jobs/${id}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.message || "Failed to delete job")
   return id
 }

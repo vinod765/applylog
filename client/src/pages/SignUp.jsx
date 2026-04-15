@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button"
 import { signUp } from "../api/auth"
 
 export default function SignUp() {
-  const [name,            setName]            = useState("")
-  const [email,           setEmail]           = useState("")
-  const [password,        setPassword]        = useState("")
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [error,           setError]           = useState("")
-  const [loading,         setLoading]         = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const { login }  = useAuth()
-  const navigate   = useNavigate()
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -31,12 +31,10 @@ export default function SignUp() {
     setLoading(true)
 
     try {
-      // TODO: signUp should return { user, token } just like signIn does
       const { user, token } = await signUp(name, email, password)
-      login(user, token)        // log them in immediately — no need to redirect to signin
+      login(user, token)
       navigate("/dashboard")
     } catch (err) {
-      // TODO: check err.message for "email already in use" and show specific message
       setError(err.message || "Something went wrong. Please try again.")
       setLoading(false)
     }
@@ -48,11 +46,8 @@ export default function SignUp() {
       style={{ backgroundColor: "#f5f4f0" }}
     >
       <div className="w-full max-w-lg bg-white rounded-3xl border border-gray-200 p-14 flex flex-col gap-8">
-        <Link to="/" className="flex items-center gap-2 w-fit">
-          <div className="w-7 h-7 rounded-lg bg-gray-900 flex items-center justify-center">
-            {/* TODO: replace with actual logo/icon */}
-            <span className="text-white text-xs font-bold">A</span>
-          </div>
+        
+        <Link to="/" className="w-fit">
           <span className="text-3xl font-bold text-gray-900">
             Apply<span className="text-blue-600">Log</span>
           </span>

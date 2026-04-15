@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button"
 import { signIn } from "../api/auth"
 
 export default function SignIn() {
-  const [email,    setEmail]    = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error,    setError]    = useState("")
-  const [loading,  setLoading]  = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const { login }  = useAuth()
-  const navigate   = useNavigate()
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -34,11 +34,7 @@ export default function SignIn() {
       style={{ backgroundColor: "#f5f4f0" }}
     >
       <div className="w-full max-w-lg bg-white rounded-3xl border border-gray-200 p-14 flex flex-col gap-8">
-        <Link to="/" className="flex items-center gap-2 w-fit">
-          <div className="w-7 h-7 rounded-lg bg-gray-900 flex items-center justify-center">
-            {/* TODO: replace with actual logo/icon from public/favicon.svg */}
-            <span className="text-white text-xs font-bold">A</span>
-          </div>
+        <Link to="/" className="w-fit">
           <span className="text-3xl font-bold text-gray-900">
             Apply<span className="text-blue-600">Log</span>
           </span>
